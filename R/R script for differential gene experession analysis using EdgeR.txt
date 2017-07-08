@@ -1,0 +1,43 @@
+transcript.annotation<-read.delim("annotation_file_for_EdgeR.txt",row.names=1,stringsAsFactors=T)
+exon.count<-read.delim("exon.count.txt",stringsAsFactors=F,header=T)[,2:16]
+transcript.count<-apply(exon.count[,2:15],2,function(x){     tapply(x,exon.count[,1],function(y){   sum(y)   }      )})
+colnames(transcript.count)<-c("C0.1","C0.2","C6.1","C6.2","I6.1","I6.2","C24.1","C24.2","I24.1","I24.2","C48.1","C48.2","I48.1","I48.2")
+
+#RUN EDGER
+library(edgeR)
+
+#BUILD DGE LIST FOR TREATMENT
+group <- factor(c("C0","C0","C6","C6","I6","I6","C24","C24","I24","I24","C48","C48","I48","I48"))
+dge <- DGEList(counts=transcript.count, group=group)
+dge.cpm = cpm(dge,normalized.lib.sizes=F,log=FALSE,prior.count=0)
+
+#REMOVE TRASNCRIPTS WITH LOW EXPRESSION LEVELS TO AVOID POORLY EXPRESSED GENES BEING REPORTED IN THE DIFFERETIAL EXPRESSION ANALYSIS
+ridx = rowSums(dge.cpm >= 1) >= 1
+dge = dge[ridx,,keep.lib.sizes=FALSE]
+
+#CHECK CORRELATION BETWEEN SAMPLES
+plotMDS(dge)
+
+
+#DESIGN THE EXPREIMENT
+dev <- factor(factor(c("D0","D0","D6","D6","D6","D6","D24","D24","D24","D24","D48","D48","D48","D48")))
+treatment <- factor(factor(c("C","C","C","C","I","I","C","C","I","I","C","C","I","I")))
+design <- model.matrix(~dev+treatment)
+
+#GET DIFFERENTIALLY EXPRESSED GENES
+dge1 <- estimateGLMCommonDisp(dge,design)
+fit <- glmFit(dge1, design)
+lrt <- glmLRT(fit)
+table<-topTags(lrt,n=nrow(dge.cpm))$table
+diff.table<-table[table$FDR <= 0.05 & abs(table$logFC) > 2,]
+
+#MERGE DIFFERENTIALLY EXPRESSED TRANSCRIPTS WITH THEIR ANNOTATION BY COMPARING THE ROW NAMES
+diff.table<-merge(diff.table,transcript.annotation,by="row.names")
+#MERGE DIFFERENTIALLY EXPRESSED TRANSCRIPTS WITH THEIR COUNT PER MILLION BY COMPARING THE Row.name COLUMN OF diff.table WITH ROW NAMES OF dge.cpm
+diff.table<-merge(diff.table,dge.cpm,by.x="Row.names",by.y="row.names")
+#SORT TABLE BY FOLD CHANGE
+diff.table<-diff.table[order(diff.table$logFC,decreasing=T),]
+#WRITE TABLE TO A FILE
+write.table(diff.table,file="diff_table.txt",col.names=T,row.names=F,sep="\t",quote=F)
+
+
