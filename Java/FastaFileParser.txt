@@ -1,0 +1,177 @@
+import java.io.BufferedReader;
+
+import java.io.File;
+
+import java.io.FileInputStream;
+
+import java.io.FileNotFoundException;
+
+import java.io.IOException;
+
+import java.io.InputStreamReader;
+
+ 
+
+public class FastaFileParser {
+
+      public static void main(String[] args) {
+
+            File seqFile = new File("sequence.txt");
+
+            // This is called Chaining...
+
+            // System.in is a "Stream". That reads ints in command prompt
+
+            // But for our purpose it will cause problem. So we are chaining it to "Reader".
+
+            // Reader is just like "Stream". But it reads chars.
+
+            InputStreamReader cmdReader = new InputStreamReader(System.in);
+
+            BufferedReader buffCmdReader = new BufferedReader(cmdReader);
+
+            // Ask the user to enter seq number.
+
+            System.out.print("Please Enter the Sequence Number:");
+
+            String seqNumberString = null;
+
+            try {
+
+                  seqNumberString = buffCmdReader.readLine();
+
+            } catch (IOException e) {
+
+                  e.printStackTrace();
+
+            }
+
+            // parse and take the number from the string user entered.
+
+            int seqNumber = Integer.parseInt(seqNumberString);
+
+            // function to keep fasta file parsing logic seperate
+
+            printSeqNumber(seqFile, seqNumber);
+
+      }
+
+ 
+
+      private static void printSeqNumber(File seqFile, int seqNumber) {
+
+            FileInputStream seqIn = null;
+
+            int count = 0;         
+
+            try {
+
+                  // opens the file and gives a "stream"
+
+                  seqIn = new FileInputStream(seqFile);
+
+            } catch (FileNotFoundException e) {
+
+                  System.out.println("The Sequence File is not found...");
+
+                  // this quits the program...
+
+                  System.exit(0);
+
+            }
+
+            // we need a "reader" here also as we are dealing the fasta file as a text file...
+
+            // we will go for "stream" only when we handle as a "binary" file... tats is for files like JPEG
+
+            InputStreamReader reader = new InputStreamReader(seqIn);         
+
+            try {
+
+                  // read the first character
+
+                  // here a character is read and it is converted into its ascii value.
+
+                  int current = reader.read();
+
+                  while (current != -1) {
+
+                        // covert the current to char for avoiding any confusion
+
+                        char currentChar = (char) current;
+
+                        // if the currentChar is '>', then its a biginning of a new seq
+
+                        if (currentChar == '>') {
+
+                              // increment the count
+
+                              count++;
+
+                              // if the count is equal to seq number, then it is the sequence we need.
+
+                              if (count == seqNumber) {                                  
+
+                                    current = reader.read();
+
+                                    currentChar = (char) current;
+
+                                    // if currentChar is '>', then current sequence is over. And
+
+                                    // if current is -1, then we are at the end of file. So, the loop should break.
+
+                                    while (currentChar != '>' && current != -1) {
+
+                                          System.out.print(currentChar);
+
+                                          current = reader.read();
+
+                                          currentChar = (char) current;
+
+                                    }// end of inner while loop
+
+                                    // Since we have printed the required sequence,
+
+                                    // lets break the outer while loop
+
+                                    break;
+
+                              }
+
+                        }    
+
+                        // we will come this line, if we didnt enter the inner while loop.
+
+                        // Tat means, we have to read further to reach our required seq.
+
+                        current = reader.read();
+
+                  } // end of outer while loop             
+
+                 
+
+                 
+
+                  // We reach here after the sequence is printed OR after the file is finished.
+
+                  // If we had printed the seq, then obviously seqNumber and count will match.
+
+                  // But if they didnt match, then it means we never entered inner loop.
+
+                  // Hence the message...
+
+                  if(count!=seqNumber){
+
+                        System.out.println("Oops... Sequence Number out of range...");
+
+                  }                
+
+            } catch (IOException e) {
+
+                  e.printStackTrace();
+
+            }
+
+      }
+
+}
