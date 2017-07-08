@@ -1,0 +1,58 @@
+Phase 10- Vipers
+1 Bill generated from using the booking history table. We have included offers, insurance while calculating the bill
+select t.custid,(((100-o.discount)/100)*t.orgprice)+ins.price FINALPRICE from offers o, (select custid,carid,(extract(day from diff)*24+extract(hour from diff))*dailycharge orgprice,code from 
+(select b.id,custid,carid,droptime-pickuptime diff, dailycharge,code from bookinghistory b,car c where c.id=b.carid 
+and canceltime is null))t, (select i.price,custid from bookinghistory b, chooses c, 
+insurance i where i.pno=c.pno and c.bookeddate=to_date(to_char(pickuptime,'DD-Month-YY')) 
+and canceltime is null and b.custid=c.licno order by custid)ins where o.code=t.code and ins.custid=t.custid;
+
+
+2. generating the quarterly report on the car returns. Categorized the cars into different classes based on the dailycharge. Also given the last three months income.
+M1 being the latest month. 
+select rpt.car_segment,sum(rpt.Q1) as Q1,sum(rpt.Q2) as Q2,sum(rpt.Q3) as Q3,sum(rpt.Q4) as Q4,sum(rpt.prev_month1) as M1,sum(rpt.prev_month2) as M2,sum(rpt.prev_month3) as M3
+from 
+(select Car_segment.car_Segment,car_sales.amount,case car_sales.QTR when  'Q1' then car_sales.amount else 0 end as Q1,
+case car_sales.QTR when 'Q2' then car_sales.amount else 0 end as Q2,
+case car_sales.QTR when 'Q3' then car_sales.amount  else 0 end as Q3,
+case car_sales.QTR when 'Q4' then car_sales.amount else 0 end as Q4,
+case when to_number(to_char(car_sales.pickuptime,'YYYYMM')) = to_number(to_char(add_months(sysdate,-1),'YYYYMM')) then car_sales.amount else 0 end as Prev_Month1,
+case when to_number(to_char(car_sales.pickuptime,'YYYYMM')) = to_number(to_char(add_months(sysdate,-2),'YYYYMM')) then car_sales.amount else 0 end as Prev_Month2,
+case when to_number(to_char(car_sales.pickuptime,'YYYYMM')) = to_number(to_char(add_months(sysdate,-3),'YYYYMM')) then car_sales.amount else 0 end as Prev_Month3
+from 
+(select c.id carid,bh.type,bh.pickuptime,bh.droptime,c.dailycharge,o.discount ,
+(extract (day from (droptime-pickuptime))*24*60 +extract(hour from (droptime-pickuptime))*60 +extract(minute from (droptime-pickuptime)))/(24*60)*c.dailycharge*(100 -o.discount)/100 amount,
+case when to_number(to_char(pickuptime,'YYYYMM')) between 
+to_number(to_char(pickuptime,'YYYY'))*100+1 and to_number(to_char(pickuptime,'YYYY'))*100+3
+then 'Q1'
+When to_number(to_char(pickuptime,'YYYYMM')) between 
+to_number(to_char(pickuptime,'YYYY'))*100+4 and to_number(to_char(pickuptime,'YYYY'))*100+6
+then 'Q2'
+When to_number(to_char(pickuptime,'YYYYMM')) between 
+to_number(to_char(pickuptime,'YYYY'))*100+7 and to_number(to_char(pickuptime,'YYYY'))*100+9
+then 'Q3'
+When to_number(to_char(pickuptime,'YYYYMM')) between 
+to_number(to_char(pickuptime,'YYYY'))*100+10 and to_number(to_char(pickuptime,'YYYY'))*100+12
+then 'Q4' else 'Bad_Value' end QTR
+from lsayana.CAR c, lsayana.BOOKINGHISTORY bh,lsayana.offers o 
+where c.id=bh.carid 
+and o.code=bh.code) car_Sales,
+(select Case when dailycharge<45 then 'Economy'
+when dailycharge<55 and dailycharge>=45 then 'Standard'
+when dailycharge>=55 then 'Luxury' else 'Unknown' end as Car_Segment,id carid
+from lsayana.Car) Car_segment 
+where car_segment.carid=car_sales.carid 
+and to_number(to_char(car_sales.pickuptime,'YYYYMM'))<to_number(to_char(sysdate,'YYYYMM'))) rpt 
+group by rpt.car_Segment;
+
+3 Getting the customerid who has given the maximum income for the company
+select Custid from 
+(select bh.custid,sum(extract(day from (droptime-pickuptime))*24+extract(hour from (droptime-pickuptime))*c.dailycharge*(100 -o.discount)/100) 
+Paid_Amount from lsayana.bookinghistory bh,lsayana.car c,lsayana.offers o where bh.carid=c.id and o.code=bh.code group by bh.Custid)
+where Paid_amount=(select max(paid_amount) from (select bh.custid,
+sum(extract(day from (droptime-pickuptime))*24+extract(hour from (droptime-pickuptime))*c.dailycharge*(100 -o.discount)/100) 
+Paid_Amount from lsayana.bookinghistory bh, lsayana.car c,
+lsayana.offers o where bh.carid=c.id and o.code=bh.code
+group by bh.Custid));
+
+4 Giving the customer details of the customer who has not done any online booking
+Select licno,fname,lname from customer C, BOOKINGHistory B where C.licno=B.CUSTID and B.CUSTID not in (select custid From BookingHistory where Type='Online');
