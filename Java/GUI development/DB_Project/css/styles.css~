@@ -1,0 +1,334 @@
+
+/* 
+----------------------------------------------------------------------------------------
+
+Copyright 2009 - Thierry Ruiz - www.dotemplate.com - All rights reserved.
+
+THIS TEMPLATE IS FREE AS LONG AS YOU KEEP THE LINK TO WWW.DOTEMPLATE.COM IN THE FOOTER
+TO REMOVE THE LINK, PLEASE MAKE A 10 DOLLARS DONATION at www.dotemplate.com/#donate
+
+----------------------------------------------------------------------------------------
+*/
+
+
+
+
+html {
+	background: #EFFF98;
+	margin:0 0 0 -1px;
+	padding:0;	
+	overflow-Y: scroll;
+}
+
+
+body {
+	padding:0;
+	margin :0;
+	display:table; 
+	width:100%;	
+}
+
+
+  
+  
+body {
+	color:#D0D0D0;
+	font-family: 'Trebuchet MS', sans-serif ;
+	font-size: 13px;
+	font-style: normal ;
+	font-weight: normal ;
+	text-transform: normal;
+}
+
+
+p {
+	letter-spacing: normal ;
+	line-height: 1.7em ;
+}
+
+h1 {
+	color:#efff98;
+	font-size:22px ;
+	margin:25px 0 10px 0;
+	clear:both;
+}
+
+
+h2 {
+	color:#efff98;
+	font-size:20px ;
+	margin:20px 0 10px 0;
+	clear:both;
+}
+
+
+h3 {
+	color:#efff98;
+	font-size:18px;
+	margin:20px 0 5px 0;
+	clear:both;
+}
+
+
+
+a:link, a:visited {
+	color:#e0ff31 ;
+	text-decoration:none;
+}
+
+
+a:hover {
+	color:#FFFFFF;
+	text-decoration:underline;
+}
+
+
+
+
+  
+  
+
+#wrapper {
+	background: transparent url( page-vbg.jpg ) repeat-y scroll 50% 0px ;
+	margin:0 auto ;
+	width:100%;
+
+}
+#wrapper * {margin:0; padding:0}
+  
+  
+body {
+	background-color:#EFFF98;
+}
+
+
+
+
+
+#bg {
+	margin:0 auto;
+	padding:0;
+	background:transparent ;
+	background-image: url( hat.jpg ) ;
+ 	background-repeat:no-repeat;	
+	background-position: center top ;
+}
+
+
+
+  
+  
+#header {
+	margin: 0 auto;
+	min-height:30px;
+	height: 30px;
+	width: 800px;
+}
+
+
+#page {
+	background: transparent url( page-bg.jpg ) no-repeat center top;
+}
+
+
+
+  
+  
+
+
+#container {
+	margin:0 auto;
+	width:900px; 
+}
+
+#banner {
+	margin: 0 auto;
+	height:210px;
+	width:100%;
+}
+
+
+#content {
+	width:800px;
+	margin:0 auto ;
+	text-align:left;
+	min-height:100px;
+}
+
+
+#content p {
+	text-align:justify;
+}
+
+
+table.example
+{
+color:#000000;
+background-color:#e5eecc;
+padding-top:8px;
+padding-bottom:8px;
+padding-left:10px;
+padding-right:10px;
+border:1px solid #d4d4d4;
+background-image:url('images/bgfadegreen.gif');
+background-repeat:repeat-x;
+}
+
+
+
+table {
+	font: 11px/24px Verdana, Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	
+table-layout:auto;
+	}
+
+th {
+	padding: 0 0.5em;
+	text-align: left;
+	}
+
+tr.yellow td {
+	border-top: 1px solid #FB7A31;
+	border-bottom: 1px solid #FB7A31;
+	background: #FFC;
+	}
+
+td {
+	border-bottom: 3px solid #e0ff31;
+	padding: 0 0.5em;
+	}
+
+td:first-child {
+	width: 190px;
+	}
+
+td+td {
+	border-left: 1px solid green;
+	text-align: left;
+	}
+
+
+#footerWrapper {
+	margin:0 auto;
+	height:160px;
+	padding:0;
+	background:transparent url( footerWrapper-bg.jpg ) no-repeat scroll center top ;
+}
+
+
+#footer {
+	margin:0 auto;
+	padding:0;
+	width:200px;
+	height:12px;
+        font-size:8px ;
+}
+
+
+  
+  
+#footer {
+	text-align:center;
+}
+
+
+  
+  
+
+
+
+#left {
+	width:90px;
+	padding:20px 10px 20px 20px;
+	float:left;
+}
+
+
+#center {
+	width:400px;	
+	padding:10px 20px 20px 10px ;
+	float:left;
+}
+
+ 
+#content p {
+	margin-top:10px;
+margin-left:10px;
+	text-align:justify;
+}
+
+
+  
+  
+  
+  
+
+#sidebar ul.vmenu {
+	list-style: none;
+	text-align: left;
+	margin: 4px 0px 4px 0px; 
+	padding: 0;
+	text-decoration: none;	
+	border-top: 1px solid #e0ff31;	
+}
+
+
+#sidebar ul.vmenu li {
+	list-style: none;
+	padding: 4px 0 4px 0px;
+	margin: 0 2px;	
+	border-bottom: 1px solid #e0ff31;
+}
+
+
+
+#sidebar ul.vmenu li a {
+	text-decoration: none;
+	color:#d0d0d0;
+}
+
+
+#sidebar ul.vmenu li a:hover {
+	color:#e0ff31;
+}
+
+
+#sidebar ul.vmenu ul { margin: 12px 6px 0 7px; padding: 0; }
+#sidebar ul.vmenu ul li { border: none; }
+
+
+
+
+
+
+
+
+.clear {
+	clear: both;
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+	width: 0;
+	height: 0;
+}
+
+
+
+
+#slideshow {list-style:none; color:#fff}
+#slideshow span {display:none}
+
+
+#fullsize {position:relative; width:500px; height:300px; padding:2px; border:1px solid #ccc; background:#000}
+#information {position:absolute; bottom:0; width:500px; height:0; background:#000; color:#fff; overflow:hidden; z-index:200; opacity:.7; filter:alpha(opacity=70)}
+#information h3 {padding:4px 8px 3px; font-size:14px}
+#information p {padding:0 8px 8px}
+#image {width:500px float:right}
+#image img {position:absolute; z-index:25; width:auto}
+
+#thumbnails {margin-top:5px}
+
+#slidearea {float:left; position:relative; width:480px; margin-left:23px; height:81px; overflow:hidden}
+
+
